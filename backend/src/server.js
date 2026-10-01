@@ -1,0 +1,16 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import auth from './routes/auth.js';
+import stores from './routes/stores.js';
+import ratings from './routes/ratings.js';
+import admin from './routes/admin.js';
+import owner from './routes/owner.js';
+import { notFound,errorHandler } from './middleware/error.js';
+dotenv.config();
+const app=express();
+app.use(cors({origin:process.env.CLIENT_URL||'http://localhost:5173'}));app.use(express.json());
+app.get('/api/health',(req,res)=>res.json({status:'ok'}));
+app.use('/api/auth',auth);app.use('/api/stores',stores);app.use('/api/ratings',ratings);app.use('/api/admin',admin);app.use('/api/owner',owner);
+app.use(notFound);app.use(errorHandler);
+const port=process.env.PORT||5000;app.listen(port,()=>console.log(`API running on http://localhost:${port}`));
